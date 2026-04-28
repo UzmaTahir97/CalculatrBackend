@@ -80,33 +80,50 @@ app.post("/calculator", async (req, res) => {
   console.log("BODY:", req.body);
 
   try {
-     const expression = req.body.expression;
-    // const { expression } = req.body;
+    const expression = req.body.expression;
 
-    console.log("EXPRESSION:", expression);
+if (!expression) {
+  return res.json({ err: "No Expression Received" });
+}
 
-    if (!expression) {
-      return res.json({ err: "No Expression Received" });
-    }
+console.log("EXPRESSION:", expression);
 
-    const result = eval(expression);
+const result = Function("return " + expression)();
 
-    const data = new Calc({ expression, result });
-    await data.save();
+const data = new Calc({ expression, result });
+await data.save();
 
-    res.json({ result });
+res.json({ result });
+    //  const expression = req.body.expression;
+    // // const { expression } = req.body;
+
+    // console.log("EXPRESSION:", expression);
+
+    // if (!expression) {
+    //   return res.json({ err: "No Expression Received" });
+    // }
+
+    // const result = eval(expression);
+
+    // const data = new Calc({ expression, result });
+    // await data.save();
+
+    // res.json({ result });
 
   } catch (error) {
      console.log(error);
     res.json({ err: "Invalid Expression" });
   }
 });
+// app.get("/history", async (req, res) => {
+//   const data = await Calc.find();
+//   res.json(data);
+// });
 
 app.get("/history", async (req, res) => {
-  const data = await Calc.find();
+  const data = await Calc.findOne().sort({ _id: -1 });
   res.json(data);
 });
-
 app.listen(5000, () =>
   console.log("Server Running on Port 5000")
 );
