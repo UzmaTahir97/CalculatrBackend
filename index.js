@@ -129,7 +129,7 @@ res.json({ result });
 // });
 
 app.get("/history", async (req, res) => {
-  const data = await Calc.findOne().sort({ _id: -1 });
+  const data = await Calc.find().sort({ createdAt: -1 });
   res.json(data);
 });
 app.listen(5000, () =>
