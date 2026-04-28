@@ -69,8 +69,16 @@ mongoose.connect(process.env.MONGO_URI)
 .catch(err => console.log(err));
 
 const calcSchema = new mongoose.Schema({
-  expression: String,
-  result: Number
+  expression: {
+    type: String,
+    required: true
+  },
+  result: {
+    type: Number,
+    required: true
+  }
+}, {
+  timestamps: true
 });
 
 const Calc = mongoose.model("Calc", calcSchema);
